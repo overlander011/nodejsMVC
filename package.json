@@ -8,22 +8,18 @@
     "start": "nodemon server.js"
   },
   "repository": {
-    "type": "git",
-    "url": "git+ssh://git@gitlab.com/CSBlockchainKmitl/plantation.git"
+    "type": "git"
   },
   "keywords": [],
-  "author": "",
+  "author": "itsaraphap 60050284",
   "license": "ISC",
   "dependencies": {
-    "date-and-time": "^0.7.0",
-    "dateformat": "^3.0.3",
+    "cors": "^2.8.5",
     "express": "^4.17.1",
     "moment": "^2.24.0",
     "mongoose": "^5.7.7",
     "nodemon": "^1.19.4",
     "npm": "^6.13.0",
-    "password-generator": "^2.2.3",
-    "sha256": "^0.2.0",
-    "winston": "^3.2.1"
+    "swagger-ui-express": "^4.1.3"
   }
 }

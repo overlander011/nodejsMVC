@@ -1,0 +1,142 @@
+swagger: '2.0'
+info:
+  description: 'Create by itsaraphap nuadolo _ 60050284 Computer science  KMITL'
+  version: '2'
+  title: MVC [Exit-Exam]
+host: 'localhost:8000'
+tags:
+  - name: CreateStudent
+  - name: GetStudent
+schemes:
+  - http
+paths:
+
+ 
+  /createStudent:
+    post:
+      tags:
+        -  CreateStudent
+      summary: Create new Student information
+      description: Create Student information for collect in MongoDB
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: body
+          description: request body student
+          required: true
+          schema:
+            $ref: '#/definitions/createStudentInfo'
+        
+             
+      responses:
+        '201':
+          description: Created
+        '400':
+          description: Bad Request
+        '500':
+          description: Internal Server Error
+          
+
+  /getStudentbyID:
+    post:
+      tags:
+        - GetStudent
+      summary: get Student information
+      description: get Student information form MongoDB
+      consumes:
+        - application/x-www-form-urlencoded
+      produces:
+        - application/json
+      parameters:
+        - in: formData
+          name: StudentID
+          type: string
+          description: request student ID
+          required: true
+          
+      
+        
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: Bad Request
+        '500':
+          description: Internal Server Error
+         
+
+
+definitions:
+
+  createStudentInfo:
+    type: object
+    required:
+      - bc_user
+    properties:
+      StudentID:
+        type: string
+        example: '60050284'
+      Firstname_Th:
+        type: string
+        example: 'อิสรภาพ'
+      Firstname_Eng:
+        type: string
+        example: 'Itsataphap'
+      Lastname_Th :
+        type: string
+        example : 'นวดโอโล'
+      Lastname_Eng :
+        type: string
+        example: 'Nuadolo'
+      
+      Course:
+        type: object
+        properties:
+            CourseID:
+              type: string
+              default: "50"
+              example: "50"
+            CourseName_Th:
+              type: string
+              default: "วิทยาการคอมพิวเตอร์"
+              example: "วิทยาการคอมพิวเตอร์"
+            CourseName_Eng:
+              type: string
+              default: "Computer Science"
+              example: "Computer Science"
+            Type:
+              type: string
+              default: "ปริญญาตรี"
+              example: "ปริญญาตรี"
+              
+            Faculty:
+              type: object
+              properties: 
+                FacultyID:
+                  type: string
+                  default: "60"
+                  example: "60"
+                FacultyName_Th:
+                  type: string
+                  default: "วิทยาศาสตร์"
+                  example: "วิทยาศาสตร์"
+                FacultyName_Eng:
+                  type: string
+                  default: "Science"
+                  example: "Science"
+              
+              
+      
+        
+    title: The Student Document Schema
+  
+
+
+             
+  
+      
+
+

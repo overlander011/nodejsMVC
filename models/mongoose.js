@@ -16,6 +16,8 @@ class connect {
         }
         return result
     }
+
+
     //updateuser
     async update(conditions, update, collectionName, options) {
         const Collection = require('../models/' + collectionName)
@@ -35,7 +37,6 @@ class connect {
         }
     }
 
-    
     
     //checkexist data(ture/flase)
     async checkexist(key,collectionName){
