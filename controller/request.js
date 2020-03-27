@@ -135,7 +135,7 @@ class request {
         console.log(resultStundent)
        
         //get course information by ID in coursedb collection
-        var resultCourse = await new connect().get({ Course: resultStundent[0].Course.CourseID }, "coursedb")
+        var resultCourse = await new connect().get({ Course: resultStundent.Course.CourseID }, "coursedb")
         console.log(resultCourse)
         
      
