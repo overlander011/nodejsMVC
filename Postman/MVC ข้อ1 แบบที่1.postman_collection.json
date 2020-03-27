@@ -1,0 +1,69 @@
+{
+	"info": {
+		"_postman_id": "8e68636b-4c84-44cd-a2e9-237be08f932e",
+		"name": "MVC ข้อ1 แบบที่1",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "createStudent",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "\n{\n\t \"StudentID\" : \"60050284\",\n\t \"Firstname_Th\":\"อิสรภาพ\",\n\t \n\t \"Firstname_Eng\": \"itsaraphap\",\n\t \"Lastname_Th\": \"นวดโอโล\",\n\t \n\t \"Lastname_Eng\" : \"Nuadolo\",\n\t \"Course\" : {\n\t \t\t\"CourseID\": \"50\",\n\t \t\t\"CourseName_Th\": \"วิทยาการคอมพิวเตอร์\",\n\t \t\t\n\t \t\t\"CourseName_Eng\": \"Computer Science\",\n\t \t\t\"Type\": \"ปริญญาตรี\",\n\t \t\t\n\t \t\t\"Faculty\": {\n\t \t\t\t\"FacultyID\": \"60\",\n\t \t\t\t\"FacultyName_Th\": \"วิทยาศาสตร์\",\n\t \t\t\n\t \t\t\t\"FacultyName_Eng\": \"Science\"\n\t \t\t}\n\t }\n\t \n} \n\n"
+				},
+				"url": {
+					"raw": "http://localhost:8000/createStudent",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"createStudent"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getStudentInfo",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"StudentID\" : \"60050284\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8000/getStudentbyID",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"getStudentbyID"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
