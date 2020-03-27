@@ -9,6 +9,8 @@ module.exports =  function () {
     );
 
     require('../models/userdb');
+    require('../models/coursedb');
+    require('../models/facultydb');
    
     return db
 

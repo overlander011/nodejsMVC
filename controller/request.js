@@ -1,10 +1,85 @@
 const student = require('../models/userdb')
+const course = require('../models/coursedb')
+const faculty = require('../models/facultydb')
 const connect = require('../models/mongoose')
 
 class request {
-    
+
+//--------------------------------------------------------------------------------------------------------------------------------------------------------   
+
+     //Create Faculty 
+     async createFaculty(req) {
+        var functionname = "[CreateFaculty]"
+        
+        //create instance from model 
+        var Faculty = new faculty ({
+
+            FacultyID: req.FacultyID,
+            FacultyName_Th: req.FacultyName_Th,
+            FacultyName_Eng: req.FacultyName_Eng,
+  
+        })
+
+        //Check FacultyID in database
+        var resultcheck_FacultyID = await new connect().checkexist({ FacultyID: req.FacultyID }, "facultydb")
+        console.log(resultcheck_FacultyID) 
+        if (!resultcheck_FacultyID) {
+        } else {
+            return `${functionname} FacultyID not available`
+        }
+        
+
+        //save Faculty to database
+        await Faculty.save()
+        return `${functionname}  Successfully `
+    }
+
+//--------------------------------------------------------------------------------------------------------------------------------------------------------
+
+    //Create Course
+    async createCourse(req) {
+        var functionname = "[CreateCourse]"
+        
+        //create instance from model 
+        var Course = new course ({
+
+            CourseID: req.CourseID,
+            CourseName_Th: req.CourseName_Th,
+            CourseName_Eng: req.CourseName_Eng,
+            Type: req.Type,
+            Faculty: {
+                FacultyID: req.Faculty.FacultyID,
+            }
+
+        })
+        
+        //Check CourseID in database
+        var resultcheck_CourseID = await new connect().checkexist({ CourseID: req.CourseID }, "coursedb")
+        console.log(resultcheck_CourseID) 
+        if (!resultcheck_CourseID) {
+        } else {
+            return `${functionname} CourseID not available`
+        }
+
+        //Check FacultyID in database
+        var resultcheck_FacultyID = await new connect().checkexist({ FacultyID: req.Faculty.FacultyID }, "facultydb")
+        console.log(resultcheck_FacultyID) 
+        if (resultcheck_FacultyID) {
+        } else {
+            return `${functionname} FacultyID not found`
+        }
+        
+
+        //save Faculty to database
+        await Course.save()
+        return `${functionname}  Successfully `
+    }
+
+
+//--------------------------------------------------------------------------------------------------------------------------------------------------------
+
     //Create Student  
-    async CreateStudent(req) {
+    async createStudent(req) {
         var functionname = "[CreateStudent]"
         
         //create instance from model 
@@ -17,24 +92,24 @@ class request {
             Lastname_Eng :req.Lastname_Eng ,
             Course : {
                 CourseID: req.Course.CourseID,
-	 		    CourseName_Th: req.Course.CourseName_Th, 		
-	 		    CourseName_Eng: req.Course.CourseName_Eng,
-                Type: req.Course.Type,
-                Faculty : {
-                    FacultyID : req.Course.Faculty.FacultyID,
-                    FacultyName_Th : req.Course.Faculty.FacultyName_Th,
-                    FacultyName_Eng: req.Course.Faculty.FacultyName_Eng
-                }
             }
             
         })
 
         //Check studentID in database
-        var resultcheckID = await new connect().checkexist({ StudentID: req.StudentID }, "userdb")
-        console.log(resultcheckID) //false คือ ไม่เจอ
-        if (!resultcheckID) {
+        var resultcheck_StudentID = await new connect().checkexist({ StudentID: req.StudentID }, "userdb")
+        console.log(resultcheck_StudentID) //false คือ ไม่เจอ
+        if (!resultcheck_StudentID) {
         } else {
             return `${functionname} StudentID not available`
+        }
+        
+        //Check CourseID in database
+        var resultcheck_CourseID = await new connect().checkexist({ CourseID: req.Course.CourseID }, "coursedb")
+        console.log(resultcheck_CourseID) 
+        if (resultcheck_CourseID) {
+        } else {
+            return `${functionname} CourseID not found`
         }
 
         //save student to database
@@ -42,6 +117,8 @@ class request {
         return `${functionname}  Successfully `
     }
     
+//--------------------------------------------------------------------------------------------------------------------------------------------------------
+
     //get student information by ID
     async getStudentbyID(req) {
         var functionname = "[getStudentbyID]"
@@ -54,19 +131,26 @@ class request {
         }
         
         //get student information by ID in userdb collection
-        var resultgetID = await new connect().get({ StudentID: req.StudentID }, "userdb")
-        var result = {
-            Firstname_Th : resultgetID[0].Firstname,
-            Firstname_Th: resultgetID[0].Firstname_Th,
-            Firstname_Eng: resultgetID[0].Firstname_Eng,
-            Lastname_Th: resultgetID[0].Lastname_Th,
-            Lastname_Eng :resultgetID[0].Lastname_Eng ,
-            FacultyName_Th :resultgetID[0].Course.Faculty.FacultyName_Th,
-            FacultyName_Eng: resultgetID[0].Course.Faculty.FacultyName_Eng
-                
-            
-        }
+        var resultStundent = await new connect().get({ StudentID: req.StudentID }, "userdb")
+        console.log(resultStundent)
+       
+        //get course information by ID in coursedb collection
+        var resultCourse = await new connect().get({ Course: resultStundent[0].Course.CourseID }, "coursedb")
+        console.log(resultCourse)
         
+     
+        
+        var result = {
+            Firstname_Th: resultStundent[0].Firstname_Th,
+            Firstname_Eng: resultStundent[0].Firstname_Eng,
+            Lastname_Th: resultStundent[0].Lastname_Th,
+            Lastname_Eng :resultStundent[0].Lastname_Eng ,
+            Course: resultStundent[0].Course.CourseID
+            // FacultyName_Th : resultFaculty[0].FacultyName_Th,
+            // FacultyName_Eng : resultFaculty[0].FacultyName_Eng
+
+        }
+
         return result
     }
 
