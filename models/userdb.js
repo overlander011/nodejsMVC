@@ -22,11 +22,7 @@ const userdb = new Schema ({
     Firstname_Eng: String,
     Lastname_Th: String,
     Lastname_Eng : String,
-<<<<<<< HEAD
     Course : course,
-=======
-    Course : course ,
->>>>>>> cf2214fee95720f003c5e2529650d872c8457a37
 });
 
 
