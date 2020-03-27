@@ -22,7 +22,7 @@ const userdb = new Schema ({
     Firstname_Eng: String,
     Lastname_Th: String,
     Lastname_Eng : String,
-    Course : [course],
+    Course : course,
 });
 
 
