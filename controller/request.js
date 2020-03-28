@@ -135,19 +135,21 @@ class request {
         console.log(resultStundent)
        
         //get course information by ID in coursedb collection
-        var resultCourse = await new connect().get({ Course: resultStundent.Course.CourseID }, "coursedb")
+        var resultCourse = await new connect().get({ CourseID:resultStundent[0].Course.CourseID }, "coursedb")
         console.log(resultCourse)
-        
-     
+
+        //get Facult information by ID in coursedb collection
+        var resultFaculty = await new connect().get({ FacultyID:resultCourse[0].Faculty.FacultyID }, "facultydb")
+        console.log(resultFaculty)
+       
         
         var result = {
             Firstname_Th: resultStundent[0].Firstname_Th,
             Firstname_Eng: resultStundent[0].Firstname_Eng,
             Lastname_Th: resultStundent[0].Lastname_Th,
             Lastname_Eng :resultStundent[0].Lastname_Eng ,
-            Course: resultStundent[0].Course.CourseID
-            // FacultyName_Th : resultFaculty[0].FacultyName_Th,
-            // FacultyName_Eng : resultFaculty[0].FacultyName_Eng
+            FacultyName_Th : resultFaculty[0].FacultyName_Th,
+            FacultyName_Eng : resultFaculty[0].FacultyName_Eng
 
         }
 
