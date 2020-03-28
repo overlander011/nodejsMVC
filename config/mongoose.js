@@ -8,9 +8,9 @@ module.exports =  function () {
         { useNewUrlParser : true}
     );
 
-    require('../models/userdb');
-    require('../models/coursedb');
-    require('../models/facultydb');
+    require('../models/patientdb');
+    require('../models/hospitaldb');
+    require('../models/patientStatusdb');
    
     return db
 

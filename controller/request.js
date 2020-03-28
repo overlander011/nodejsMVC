@@ -1,79 +1,92 @@
-const student = require('../models/userdb')
-const course = require('../models/coursedb')
-const faculty = require('../models/facultydb')
+const patient = require('../models/patientdb')
+const hospital = require('../models/hospitaldb')
+const patientStatus = require('../models/patientStatusdb')
 const connect = require('../models/mongoose')
 
 class request {
+    async request (){return}
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------   
 
      //Create Faculty 
-     async createFaculty(req) {
-        var functionname = "[CreateFaculty]"
+     async getAll_PatientList(req) {
         
-        //create instance from model 
-        var Faculty = new faculty ({
+        //get covid - patient in database
+        var covidPatientIDList = await new connect().get({ Covid_status:"Positive"  }, "patientStatusdb")
+        var All_PatientListAsArray =[] 
 
-            FacultyID: req.FacultyID,
-            FacultyName_Th: req.FacultyName_Th,
-            FacultyName_Eng: req.FacultyName_Eng,
-  
-        })
+        for(var i=0 ; i<covidPatientIDList.length; i++){
+             var HNID = covidPatientIDList[i].HNID
+             var All_PatientList = await new connect().get( {HNID : HNID} , "patientdb")
+        
+             //result of information's covid patiene
+             var result = {
+                 HNID: All_PatientList[0].HNID,
+                 Firstname: All_PatientList[0].Firstname,
+                 Lastname :All_PatientList[0].Lastname,
+                 HID : All_PatientList[0].HID
+             }
 
-        //Check FacultyID in database
-        var resultcheck_FacultyID = await new connect().checkexist({ FacultyID: req.FacultyID }, "facultydb")
-        console.log(resultcheck_FacultyID) 
-        if (!resultcheck_FacultyID) {
-        } else {
-            return `${functionname} FacultyID not available`
+            All_PatientListAsArray.push(result)
         }
-        
+        return All_PatientListAsArray
 
-        //save Faculty to database
-        await Faculty.save()
-        return `${functionname}  Successfully `
-    }
+     }
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------
 
-    //Create Course
-    async createCourse(req) {
-        var functionname = "[CreateCourse]"
-        
-        //create instance from model 
-        var Course = new course ({
+    //getTotal Patients In Hospital
+    async getTotal_PatientsInHospital(req) {
 
-            CourseID: req.CourseID,
-            CourseName_Th: req.CourseName_Th,
-            CourseName_Eng: req.CourseName_Eng,
-            Type: req.Type,
-            Faculty: {
-                FacultyID: req.Faculty.FacultyID,
+        var All_PatientsInHospital = [] 
+        var each_PatientInHospital = [] 
+        var ResultEachHospital =[]
+        var All_PatientList = await new request().getAll_PatientList();
+        
+        for(var i =0; i<All_PatientList.length ; i++){
+            //HID ของผู้ป่วยโควิดแต่ละคน 
+            var PatientListHID = All_PatientList[i].HID 
+            //ข้อมูลโรงพยาบาลของแต่ละคน
+            var patientHID = await new connect().get({ HID:PatientListHID }, "hospitaldb") 
+            var AllHospital = await new connect().get({  }, "hospitaldb") 
+
+            var result ={
+                 HID:patientHID[0].HID,
+                 Title: patientHID[0].Title
             }
-
-        })
-        
-        //Check CourseID in database
-        var resultcheck_CourseID = await new connect().checkexist({ CourseID: req.CourseID }, "coursedb")
-        console.log(resultcheck_CourseID) 
-        if (!resultcheck_CourseID) {
-        } else {
-            return `${functionname} CourseID not available`
+            //อ่านและเก็บค่าใส่อาเรย์
+            All_PatientsInHospital.push(result)
+            
+        }
+   
+        //นับจำนวนผู้ป่วยแต่ละโรงพยาบาล
+        for(var j=0;j<AllHospital.length;j++){
+            var count = 0;
+            for(var k=0;k<All_PatientsInHospital.length;k++){
+                if(AllHospital[j].HID==All_PatientsInHospital[k].HID){
+                    count += 1
+                    each_PatientInHospital[j] = count            
+                }                 
+            }   
+            //จับค่าใส่ใน json 
+            var resultEachHospital = {
+                Title: AllHospital[j].Title,
+                Total: each_PatientInHospital[j]
+            }
+            //ใส่ค่าในอาเรย์
+            ResultEachHospital.push(resultEachHospital)
+            ResultEachHospital.sort((a, b) => Number(b.Total) - Number(a.Total));
         }
 
-        //Check FacultyID in database
-        var resultcheck_FacultyID = await new connect().checkexist({ FacultyID: req.Faculty.FacultyID }, "facultydb")
-        console.log(resultcheck_FacultyID) 
-        if (resultcheck_FacultyID) {
-        } else {
-            return `${functionname} FacultyID not found`
-        }
-        
+        return  ResultEachHospital
 
-        //save Faculty to database
-        await Course.save()
-        return `${functionname}  Successfully `
+
+
+      
+
     }
+
+
 
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------
