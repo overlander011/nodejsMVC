@@ -103,47 +103,45 @@ class request {
         }
 
 
-
-
         return result
     }
     
 //--------------------------------------------------------------------------------------------------------------------------------------------------------
 
-    //get student information by ID
-    async getStudentbyID(req) {
-        var functionname = "[getStudentbyID]"
+    // //get student information by ID
+    // async getStudentbyID(req) {
+    //     var functionname = "[getStudentbyID]"
         
-        //Check StudentID in database ?
-        var resultcheckID = await new connect().checkexist({ StudentID: req.StudentID }, "userdb")
-        if (resultcheckID) {
-        } else {
-            return `${functionname} StudentID not found `
-        }
+    //     //Check StudentID in database ?
+    //     var resultcheckID = await new connect().checkexist({ StudentID: req.StudentID }, "userdb")
+    //     if (resultcheckID) {
+    //     } else {
+    //         return `${functionname} StudentID not found `
+    //     }
         
-        //get student information by ID in userdb collection
-        var resultStundent = await new connect().get({ StudentID: req.StudentID }, "userdb")
-        console.log(resultStundent)
+    //     //get student information by ID in userdb collection
+    //     var resultStundent = await new connect().get({ StudentID: req.StudentID }, "userdb")
+    //     console.log(resultStundent)
        
-        //get course information by ID in coursedb collection
-        var resultCourse = await new connect().get({ Course: resultStundent.Course.CourseID }, "coursedb")
-        console.log(resultCourse)
+    //     //get course information by ID in coursedb collection
+    //     var resultCourse = await new connect().get({ Course: resultStundent.Course.CourseID }, "coursedb")
+    //     console.log(resultCourse)
         
      
         
-        var result = {
-            Firstname_Th: resultStundent[0].Firstname_Th,
-            Firstname_Eng: resultStundent[0].Firstname_Eng,
-            Lastname_Th: resultStundent[0].Lastname_Th,
-            Lastname_Eng :resultStundent[0].Lastname_Eng ,
-            Course: resultStundent[0].Course.CourseID
-            // FacultyName_Th : resultFaculty[0].FacultyName_Th,
-            // FacultyName_Eng : resultFaculty[0].FacultyName_Eng
+    //     var result = {
+    //         Firstname_Th: resultStundent[0].Firstname_Th,
+    //         Firstname_Eng: resultStundent[0].Firstname_Eng,
+    //         Lastname_Th: resultStundent[0].Lastname_Th,
+    //         Lastname_Eng :resultStundent[0].Lastname_Eng ,
+    //         Course: resultStundent[0].Course.CourseID
+    //         // FacultyName_Th : resultFaculty[0].FacultyName_Th,
+    //         // FacultyName_Eng : resultFaculty[0].FacultyName_Eng
 
-        }
+    //     }
 
-        return result
-    }
+    //     return result
+    // }
 
 
 
