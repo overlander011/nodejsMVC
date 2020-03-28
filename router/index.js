@@ -18,7 +18,12 @@ module.exports = function (app) {
         res.json(result)
     })
 
-  
+    //Get studentbyID
+    app.get('/ShowDataPatient',async(req, res) =>{
+    var result = (await new request().getDataPatient(req.body))
+    res.status(200)
+    res.json(result)
+})
 
    
 }

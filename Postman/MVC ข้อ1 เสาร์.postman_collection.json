@@ -1,0 +1,91 @@
+{
+	"info": {
+		"_postman_id": "5f83dc4d-1c55-4688-b52d-3b41d500b2ab",
+		"name": "MVC ข้อ1 เสาร์",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "getPatientList",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"StudentID\" : \"60050284\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8000/getStudentbyID",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"getStudentbyID"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getTotal_PatientsInHospital",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "http://localhost:8000/getTotal_PatientsInHospital",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"getTotal_PatientsInHospital"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "ShowDataPatient",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8000/ShowDataPatient",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"ShowDataPatient"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

@@ -91,43 +91,21 @@ class request {
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------
 
-    //Create Student  
-    async createStudent(req) {
-        var functionname = "[CreateStudent]"
-        
-        //create instance from model 
-        var Student = new student ({
+    async getDataPatient(req) {
+        var functionname = "[ShowDataPatient]"
+       
+        var All_PatientList = await new request().getAll_PatientList();
 
-            StudentID: req.StudentID,
-            Firstname_Th: req.Firstname_Th,
-            Firstname_Eng: req.Firstname_Eng,
-            Lastname_Th: req.Lastname_Th,
-            Lastname_Eng :req.Lastname_Eng ,
-            Course : {
-                CourseID: req.Course.CourseID,
-            }
-            
-        })
-
-        //Check studentID in database
-        var resultcheck_StudentID = await new connect().checkexist({ StudentID: req.StudentID }, "userdb")
-        console.log(resultcheck_StudentID) //false คือ ไม่เจอ
-        if (!resultcheck_StudentID) {
-        } else {
-            return `${functionname} StudentID not available`
-        }
-        
-        //Check CourseID in database
-        var resultcheck_CourseID = await new connect().checkexist({ CourseID: req.Course.CourseID }, "coursedb")
-        console.log(resultcheck_CourseID) 
-        if (resultcheck_CourseID) {
-        } else {
-            return `${functionname} CourseID not found`
+        var Total_Patients = await new request().getTotal_PatientsInHospital();
+        var result = {
+            All_PatientList,
+            Total_Patients
         }
 
-        //save student to database
-        await Student.save()
-        return `${functionname}  Successfully `
+
+
+
+        return result
     }
     
 //--------------------------------------------------------------------------------------------------------------------------------------------------------
