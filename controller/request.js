@@ -1,6 +1,4 @@
-const patient = require('../models/patientdb')
-const hospital = require('../models/hospitaldb')
-const patientStatus = require('../models/patientStatusdb')
+const student = require('../models/studentdb')
 const connect = require('../models/mongoose')
 
 class request {
@@ -8,82 +6,57 @@ class request {
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------   
 
-     //Create Faculty 
-     async getAll_PatientList(req) {
-        
-        //get covid - patient in database
-        var covidPatientIDList = await new connect().get({ Covid_status:"Positive"  }, "patientStatusdb")
-        var All_PatientListAsArray =[] 
+    //login with username@cskmitl.ac.th + password
+    async loginWithEmail(req) {
+        var functionname = "[loginWithEmail]"
 
-        for(var i=0 ; i<covidPatientIDList.length; i++){
-             var HNID = covidPatientIDList[i].HNID
-             var All_PatientList = await new connect().get( {HNID : HNID} , "patientdb")
-        
-             //result of information's covid patiene
-             var result = {
-                 HNID: All_PatientList[0].HNID,
-                 Firstname: All_PatientList[0].Firstname,
-                 Lastname :All_PatientList[0].Lastname,
-                 HID : All_PatientList[0].HID
-             }
+        var str = req.Email
+        var splitted = str.split('@');
+        var SID = splitted[0]; 
+        var Email = splitted[1];
 
-            All_PatientListAsArray.push(result)
+        //เช็คว่า Domain คือ cskmitl.ac.th หรือเปล่า
+        if(Email !== "cskmitl.ac.th"){
+            return `${functionname} Wrong Domain `
+        }else{   
         }
-        return All_PatientListAsArray
 
-     }
+        //เช็คว่ามี SID นี้ใน DB หรือเปล่า
+        var resultcheckID = await new connect().checkexist({ SID }, "studentdb")
+        if (resultcheckID) {
+        } else {
+            return `${functionname} SID not found `
+        }
+        
+        //เช็คPassword ในDB ว่า ตรงกับ Password ที่กรอกมาไหม
+        var resultInfo = await new connect().get({ SID }, "studentdb")
+        if (resultInfo[0].Password == req.Password ) {
+        } else {
+            return `${functionname} Wrong Password `
+        }
+        
+        //เช็ค status ว่า login หรือยัง
+        if(resultInfo[0].Status == "ยังไม่เข้าสู่ระบบ"){
+            var resultStatus = await new connect().update({SID },
+                { 
+                    Status:"เข้าสู่ระบบแล้ว"
+                    
+                },'studentdb')   
+        }else{
+            return `${functionname} You already Login `
+        }
+        return `${functionname} Login Successfully `
+    }
+
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------
 
-    //getTotal Patients In Hospital
-    async getTotal_PatientsInHospital(req) {
+    //getAll_Login
+    async getAll_Login(req) {
+        var resultAllLogin = await new connect().get({ Status: "เข้าสู่ระบบแล้ว" }, "studentdb")
+        var numberAllLogin = resultAllLogin.length;
 
-        var All_PatientsInHospital = [] 
-        var each_PatientInHospital = [] 
-        var ResultEachHospital =[]
-        var All_PatientList = await new request().getAll_PatientList();
-        
-        for(var i =0; i<All_PatientList.length ; i++){
-            //HID ของผู้ป่วยโควิดแต่ละคน 
-            var PatientListHID = All_PatientList[i].HID 
-            //ข้อมูลโรงพยาบาลของแต่ละคน
-            var patientHID = await new connect().get({ HID:PatientListHID }, "hospitaldb") 
-            var AllHospital = await new connect().get({  }, "hospitaldb") 
-
-            var result ={
-                 HID:patientHID[0].HID,
-                 Title: patientHID[0].Title
-            }
-            //อ่านและเก็บค่าใส่อาเรย์
-            All_PatientsInHospital.push(result)
-            
-        }
-   
-        //นับจำนวนผู้ป่วยแต่ละโรงพยาบาล
-        for(var j=0;j<AllHospital.length;j++){
-            var count = 0;
-            for(var k=0;k<All_PatientsInHospital.length;k++){
-                if(AllHospital[j].HID==All_PatientsInHospital[k].HID){
-                    count += 1
-                    each_PatientInHospital[j] = count            
-                }                 
-            }   
-            //จับค่าใส่ใน json 
-            var resultEachHospital = {
-                Title: AllHospital[j].Title,
-                Total: each_PatientInHospital[j]
-            }
-            //ใส่ค่าในอาเรย์
-            ResultEachHospital.push(resultEachHospital)
-            ResultEachHospital.sort((a, b) => Number(b.Total) - Number(a.Total));
-        }
-
-        return  ResultEachHospital
-
-
-
-      
-
+        return  numberAllLogin
     }
 
 
@@ -91,58 +64,56 @@ class request {
 
 //--------------------------------------------------------------------------------------------------------------------------------------------------------
 
-    async getDataPatient(req) {
-        var functionname = "[ShowDataPatient]"
-       
-        var All_PatientList = await new request().getAll_PatientList();
+    //getAll_notLogin
+    async getAll_notLogin(req) {
+        var resultAllnotLogin = await new connect().get({ Status: "ยังไม่เข้าสู่ระบบ" }, "studentdb")
+        var numberAllnotLogin = resultAllnotLogin.length;
 
-        var Total_Patients = await new request().getTotal_PatientsInHospital();
-        var result = {
-            All_PatientList,
-            Total_Patients
+        return  numberAllnotLogin
+    }
+//--------------------------------------------------------------------------------------------------------------------------------------------------------
+
+    //getAll_notLogin
+    async getName_notLogin(req) {
+        var resultAllnotLogin = await new connect().get({ Status: "ยังไม่เข้าสู่ระบบ" }, "studentdb")
+        var resultNameAsArray = []
+        var numberAllnotLogin = resultAllnotLogin.length;
+
+        for(var i = 0 ; i<numberAllnotLogin;i++ ){
+            var nameAllnotLogin = resultAllnotLogin[i].Firstname
+            var resultName = {
+                Name : nameAllnotLogin
+            }
+            resultNameAsArray.push(resultName)
+
         }
 
-
-        return result
+        return  resultNameAsArray
     }
+
+
     
 //--------------------------------------------------------------------------------------------------------------------------------------------------------
 
-    // //get student information by ID
-    // async getStudentbyID(req) {
-    //     var functionname = "[getStudentbyID]"
-        
-    //     //Check StudentID in database ?
-    //     var resultcheckID = await new connect().checkexist({ StudentID: req.StudentID }, "userdb")
-    //     if (resultcheckID) {
-    //     } else {
-    //         return `${functionname} StudentID not found `
-    //     }
-        
-    //     //get student information by ID in userdb collection
-    //     var resultStundent = await new connect().get({ StudentID: req.StudentID }, "userdb")
-    //     console.log(resultStundent)
-       
-    //     //get course information by ID in coursedb collection
-    //     var resultCourse = await new connect().get({ Course: resultStundent.Course.CourseID }, "coursedb")
-    //     console.log(resultCourse)
-        
-     
-        
-    //     var result = {
-    //         Firstname_Th: resultStundent[0].Firstname_Th,
-    //         Firstname_Eng: resultStundent[0].Firstname_Eng,
-    //         Lastname_Th: resultStundent[0].Lastname_Th,
-    //         Lastname_Eng :resultStundent[0].Lastname_Eng ,
-    //         Course: resultStundent[0].Course.CourseID
-    //         // FacultyName_Th : resultFaculty[0].FacultyName_Th,
-    //         // FacultyName_Eng : resultFaculty[0].FacultyName_Eng
+async getAllData(req) {
+   
+    var All_Login = await new request().getAll_Login();
 
-    //     }
+    var All_notLogin = await new request().getAll_notLogin();
 
-    //     return result
-    // }
+    var AllName_notLogin = await new request().getName_notLogin();
 
+    var result = {
+        All_Login,
+        All_notLogin,
+        AllName_notLogin
+    }
+
+
+    return result
+}
+
+//--------------------------------------------------------------------------------------------------------------------------------------------------------
 
 
     // //login with username + password

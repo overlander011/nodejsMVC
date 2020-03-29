@@ -5,25 +5,29 @@ module.exports = function (app) {
     
 
     //Get studentbyID
-    app.post('/getPatientList',async(req, res) =>{
-        var result = (await new request().getAll_PatientList(req.body))
+    app.post('/loginWithEmail',async(req, res) =>{
+        var result = (await new request().loginWithEmail(req.body))
         res.status(200)
         res.json(result)
     })
 
-     //Get studentbyID
-     app.get('/getTotal_PatientsInHospital',async(req, res) =>{
-        var result = (await new request().getTotal_PatientsInHospital(req.body))
+    app.get('/getAll_Login',async(req, res) =>{
+        var result = (await new request().getAll_Login(req.body))
         res.status(200)
         res.json(result)
     })
 
-    //Get studentbyID
-    app.get('/ShowDataPatient',async(req, res) =>{
-    var result = (await new request().getDataPatient(req.body))
-    res.status(200)
-    res.json(result)
-})
+    app.get('/getAll_notLogin',async(req, res) =>{
+        var result = (await new request().getAll_notLogin(req.body))
+        res.status(200)
+        res.json(result)
+    })
+
+    app.get('/getAllData',async(req, res) =>{
+        var result = (await new request().getAllData(req.body))
+        res.status(200)
+        res.json(result)
+    })
 
    
 }

@@ -8,10 +8,8 @@ module.exports =  function () {
         { useNewUrlParser : true}
     );
 
-    require('../models/patientdb');
-    require('../models/hospitaldb');
-    require('../models/patientStatusdb');
-   
+    require('../models/studentdb');
+ 
     return db
 
 }
