@@ -5,35 +5,97 @@ info:
   title: MVC [Exit-Exam]
 host: 'localhost:8000'
 tags:
-- name: Login
+- name: ManagesRooms
 - name: GetReport
 
 
 schemes:
   - http
 paths:
-  /loginWithEmail:
+  /createNewRooms:
     post:
       tags:
-        -  Login
-      summary: Create new Student information
-      description: Create Student information for collect in MongoDB
+        -  ManagesRooms
+      summary: Create new Rooms information
+      description: Create Rooms information for collect in MongoDB
       consumes:
         - application/x-www-form-urlencoded
       produces:
         - application/json
       parameters:
         - in: formData
-          name: Email
+          name: RID
           type: string
-          description: request student ID
+          description: Example RID ; 001 ,002 ,003
           required: true
+          default: "006"
+
+
         - in: formData
-          name: Password
+          name: Firstname
           type: string
-          description: request Password 
+          description: request Firstname 
           required: true
-             
+          default: "วิทยา"
+
+        - in: formData
+          name: Lastname
+          type: string
+          description: request Lastname 
+          required: true
+          default: "มหานคร"
+
+        - in: formData
+          name: Status
+          type: string
+          description: Example Status ; Ready , NotReady , Pending
+          required: true
+          default: "Ready" 
+          
+      responses:
+        '201':
+          description: Created
+        '400':
+          description: Bad Request
+        '500':
+          description: Internal Server Error
+          
+  /editRooms:
+    post:
+      tags:
+        -  ManagesRooms
+      summary: Edit Rooms information by RID
+      description: Edit Rooms information in collection ถ้าต้องการแก้ไขอะไรก็ใส่ค่าภายในช่อง และ ถ้าไม่ต้องการเว้นว่างไว้ ไม่สามารถแก้ไข RID ได้
+      
+      consumes:
+        - application/x-www-form-urlencoded
+      produces:
+        - application/json
+      parameters:
+        - in: formData
+          name: RID
+          type: string
+          
+          description: Example RID ; 001 ,002 ,003
+          required: true
+          default: '001'
+
+        - in: formData
+          name: Firstname
+          type: string
+          description: request Firstname 
+
+        - in: formData
+          name: Lastname
+          type: string
+          description: request Lastname 
+
+        - in: formData
+          name: Status
+          type: string
+          description:  Example Status ; Ready , NotReady , Pending
+          default: "NotReady"
+          
       responses:
         '201':
           description: Created
@@ -43,20 +105,17 @@ paths:
           description: Internal Server Error
  
   
-  /getAllData:
+  /getReportData:
     get:
       tags:
         - GetReport
-      summary: get Student information
-      description: get Student information form MongoDB
+      summary: get Report information
+      description: get Report information form MongoDB
       consumes:
         - application/json
       produces:
         - application/json
 
-          
-      
-  
       responses:
         '200':
           description: OK

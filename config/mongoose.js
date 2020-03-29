@@ -8,7 +8,7 @@ module.exports =  function () {
         { useNewUrlParser : true}
     );
 
-    require('../models/studentdb');
+    require('../models/roomdb');
  
     return db
 
